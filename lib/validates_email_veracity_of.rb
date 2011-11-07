@@ -42,6 +42,16 @@ class ValidatesEmailVeracityOf #:nodoc:
       !@options[:invalid_domains] || !@options[:invalid_domains].include?(name)
     end
 
+    # Checks the email's domain for an array of acceptable providers 
+    # ==== Options
+    # * *acceptable_domains*
+    #   - An array of strings that indicate acceptable domain names.
+    # ==== Example
+    # <tt>EmailAddress.new('k.yuriko@softbank.ne.jp').domain_is_acceptable?(:acceptable_domains => ['softbank.ne.jp']) # => true</tt>
+    def valid?
+      @options[:acceptable_domains].include?(name)
+    end
+
     # Checks if the email address' domain has any servers in it's mail exchange (MX)
     # or address (A) records.  If it does then true is returned, otherwise false is
     # returned.  If the lookup times out, it will return false (or nil if the

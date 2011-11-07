@@ -44,6 +44,11 @@ class EmailAddressTest < Test::Unit::TestCase
     assert !email.domain.valid?, 'Should not pass as a valid domain.'
   end
 
+  def test_with_acceptable_domain
+    email = ValidatesEmailVeracityOf::EmailAddress.new('k.yuriko@softbank.ne.jp', :acceptable_domains => %w[softbank.ne.jp])
+    assert email.domain.valid?, 'Should return true on acceptable domains'
+  end
+
   def test_domain_has_servers_with_no_email_address
     email = ValidatesEmailVeracityOf::EmailAddress.new(:timeout => 30)
     assert !email.domain.has_servers?, 'Should fail gracefully.'

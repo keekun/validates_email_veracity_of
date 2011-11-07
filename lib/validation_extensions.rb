@@ -24,6 +24,10 @@ module ActiveRecord #:nodoc:
       #     and other services.
       # * <b>invalid_domain_message</b>
       #   - Changes the default invalid domain error message.
+      # * <b>acceptable_domains</b>
+      #   - An array of domain names that are allowed to be used. Useful for validate mobile mail address like Japanese feature phone 
+      # * <b>unacceptable_domain_message</b>
+      #   - Changes the default unacceptable domain error message.
       #
       # ==== Examples
       # * <tt>validates_email_veracity_of :email, :message => 'is not correct.'</tt>
@@ -45,9 +49,11 @@ module ActiveRecord #:nodoc:
           :message => 'is invalid.',
           :timeout_message => 'domain is currently unreachable, try again later.',
           :invalid_domain_message => 'provider is not supported, try another email address.',
+          :unacceptable_domain_message => 'provider is not supported, try another email address.',
           :timeout => 2,
           :domain_check => true,
           :invalid_domains => [],
+          :acceptable_domains => [],
           :mx_only => false,
           :fail_on_timeout => false
         }
@@ -56,7 +62,7 @@ module ActiveRecord #:nodoc:
           next if value.blank?
           email = ValidatesEmailVeracityOf::EmailAddress.new(value, configuration)
           message = :message unless email.pattern_is_valid?
-          message = :invalid_domain_message unless email.domain.valid?
+          message = :valid_domain_message unless email.domain.valid?
           if configuration[:domain_check] && !message
             message = case email.domain.has_servers?
               when nil then :timeout_message
